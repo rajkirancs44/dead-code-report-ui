@@ -1,0 +1,185 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: #2e3a59;
+  color: white;
+  padding: 1rem;
+}
+
+.sidebar-title {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-nav li {
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+
+.sidebar-nav .active {
+  font-weight: bold;
+  background: #44557f;
+  padding-left: 0.5rem;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.report {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.summary-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.card {
+  background: #eee;
+  padding: 1rem;
+  border-radius: 6px;
+  min-width: 150px;
+  text-align: center;
+}
+
+.green {
+  background: #d2f8d2;
+}
+
+.red {
+  background: #f8d2d2;
+}
+
+.download-button {
+  padding: 0.5rem 1rem;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.explorer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.tree-view {
+  width: 40%;
+  max-height: 400px;
+  overflow-y: auto;
+  background: #f0f0f0;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.tree-item {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.tree-item.selected {
+  background: #d0e0ff;
+  font-weight: bold;
+}
+
+.method-list {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 6px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.dead-method {
+  color: #b00020;
+}
+
+.used-method {
+  color: #0a7f33;
+}
+
+.search-box {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  background: #ddd;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+}
+
+.tab.active {
+  background: #ffffff;
+  border-bottom: 2px solid transparent;
+  font-weight: bold;
+}
+
+.dropdown-row {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.perf-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.perf-table th,
+.perf-table td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.perf-table th {
+  background: #f0f0f0;
+}
+
+.perf-table tr:nth-child(even) {
+  background: #fafafa;
+}

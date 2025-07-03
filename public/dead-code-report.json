@@ -1,0 +1,11 @@
+{
+  "summary": {
+    "totalMethods": 1500,
+    "usedMethods": 1100,
+    "deadMethods": 400
+  },
+  "deadCodeByClass": {
+    "com.example.MyService": ["doSomething()", "unusedMethod()"],
+    "com.example.AnotherClass": ["neverCalled(int)"]
+  }
+}
