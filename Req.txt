@@ -1,0 +1,5 @@
+npm install recharts @mui/material @mui/icons-material
+npm install @emotion/react @emotion/styled
+
+
+npm install @mui/material @mui/icons-material @emotion/react @emotion/styled recharts
