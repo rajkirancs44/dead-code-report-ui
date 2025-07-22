@@ -6,17 +6,23 @@ import {
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid, LabelList } from "recharts";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
+import { useAppService } from "./AppServiceProvider";
 
 export default function PerformanceReport() {
   const [reportData, setReportData] = useState(null);
   const [sortKey, setSortKey] = useState("avgTimeMs");
+  const { appId, serviceName } = useAppService();
 
   useEffect(() => {
-    fetch("http://localhost:8081/api/deadcode/stats")
+    if (!appId || !serviceName) return;
+    fetch(
+      `http://localhost:8081/api/deadcode/stats?appId=${encodeURIComponent(appId)}&serviceId=${encodeURIComponent(serviceName)}`
+      // Optionally add &from=...&to=... if you want to filter by time range
+    )
       .then((res) => res.json())
       .then(setReportData)
       .catch((err) => console.error("Failed to load performance report:", err));
-  }, []);
+  }, [appId, serviceName]);
 
   if (!reportData || !reportData.methodStats) return <div>Loading...</div>;
 

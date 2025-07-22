@@ -5,6 +5,7 @@ import {
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid
 } from "recharts";
+import { useAppService } from "./AppServiceProvider";
 
 const METRICS = [
   { key: "cpuLoad", label: "Process CPU (%)", format: v => (v * 100).toFixed(1) + "%" },
@@ -35,12 +36,18 @@ export default function UsageDashboard() {
   const [selectedMetrics, setSelectedMetrics] = useState([
     "cpuLoad", "heapUsed", "threadCount"
   ]);
+  const { appId, serviceName } = useAppService();
 
   useEffect(() => {
-    fetch("http://localhost:8081/api/stats/timeline")
-      .then(res => res.json())
-      .then(setData);
-  }, []);
+    if (!appId || !serviceName) return;
+    fetch(
+      `http://localhost:8081/api/stats/timeline?appId=${encodeURIComponent(appId)}&serviceId=${encodeURIComponent(serviceName)}`
+      // Optionally add &from=...&to=... if you want to filter by time range
+    )
+      .then((res) => res.json())
+      .then(setData)
+      .catch((err) => console.error("Failed to load performance report:", err));
+  }, [appId, serviceName]);
 
   const latest = data.length > 0 ? data[data.length - 1] : {};
 

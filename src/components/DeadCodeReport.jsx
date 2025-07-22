@@ -1,30 +1,51 @@
 import React, { useEffect, useState } from "react";
 import {
   Box, Card, CardContent, Typography, Grid, Button, Chip, TextField,
-  List, ListItem, ListItemIcon, ListItemText, Divider, Paper, ToggleButton, ToggleButtonGroup, Tooltip
+  List, ListItem, ListItemText, Divider, Paper, ToggleButton, ToggleButtonGroup
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ListItemButton from "@mui/material/ListItemButton"; // <-- import this!
 import { BarChart, Bar, XAxis, YAxis, Tooltip as ChartTooltip, ResponsiveContainer, Legend, CartesianGrid } from "recharts";
 import { saveAs } from "file-saver";
+import { useAppService } from "./AppServiceProvider";
 import * as XLSX from "xlsx";
 
-export default function DeadCodeDashboard() {
+export default function DeadCodeReport() {
   const [reportData, setReportData] = useState(null);
   const [search, setSearch] = useState("");
   const [selectedClass, setSelectedClass] = useState(null);
   const [filter, setFilter] = useState("all"); // 'all' or 'dead'
+  const { appId, serviceName } = useAppService();
+
+  console.log("Rendering DeadCodeReport", reportData);
 
   useEffect(() => {
-    fetch("http://localhost:8081/api/deadcode/diff")
+    if (!appId || !serviceName) return;
+  setReportData(null);
+  setSelectedClass(null);
+    fetch(
+      `http://localhost:8081/api/deadcode/diff?appId=${encodeURIComponent(appId)}&serviceId=${encodeURIComponent(serviceName)}`
+    )
       .then((res) => res.json())
       .then(setReportData)
       .catch((err) => console.error("Failed to load report:", err));
-  }, []);
+  }, [appId, serviceName]);
 
-  if (!reportData) return <Box p={4}><Typography>Loading...</Typography></Box>;
 
+if (!appId || !serviceName) {
+  return <Box p={4}><Typography>Loading default selection...</Typography></Box>;
+}
+if (!reportData) {
+  return <Box p={4}><Typography>Loading dashboard data...</Typography></Box>;
+}
+if (
+  (!reportData.usedCodeByClass || Object.keys(reportData.usedCodeByClass).length === 0) &&
+  (!reportData.deadCodeByClass || Object.keys(reportData.deadCodeByClass).length === 0)
+) {
+  return <Box p={4}><Typography>No dead code data found for this service.</Typography></Box>;
+}
   // All class names (union of used + dead)
   const allClasses = Array.from(
     new Set([
@@ -124,9 +145,7 @@ export default function DeadCodeDashboard() {
           {filteredClasses.map(({ className, deadCount, usedCount }) => (
             <ListItem
               key={className}
-              button
-              selected={selectedClass === className}
-              onClick={() => setSelectedClass(className)}
+              disablePadding // <-- Add this!
               sx={{
                 borderLeft: selectedClass === className
                   ? "4px solid #d32f2f"
@@ -134,21 +153,27 @@ export default function DeadCodeDashboard() {
                 bgcolor: selectedClass === className ? "#fff3e0" : undefined
               }}
             >
-              <ListItemText
-                primary={
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <Typography fontWeight={selectedClass === className ? 700 : 500} sx={{ fontSize: 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      {className.split('.').pop()}
-                    </Typography>
-                    {deadCount > 0 && (
-                      <Chip size="small" label={`${deadCount} Dead`} color="error" sx={{ ml: 0.5 }} />
-                    )}
-                    {usedCount > 0 && (
-                      <Chip size="small" label={`${usedCount} Used`} color="success" sx={{ ml: 0.5 }} />
-                    )}
-                  </Box>
-                }
-              />
+              <ListItemButton // <-- Use ListItemButton!
+                selected={selectedClass === className}
+                onClick={() => setSelectedClass(className)}
+                sx={{ pl: 2, pr: 2 }}
+              >
+                <ListItemText
+                  primary={
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Typography fontWeight={selectedClass === className ? 700 : 500} sx={{ fontSize: 15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        {className.split('.').pop()}
+                      </Typography>
+                      {deadCount > 0 && (
+                        <Chip size="small" label={`${deadCount} Dead`} color="error" sx={{ ml: 0.5 }} />
+                      )}
+                      {usedCount > 0 && (
+                        <Chip size="small" label={`${usedCount} Used`} color="success" sx={{ ml: 0.5 }} />
+                      )}
+                    </Box>
+                  }
+                />
+              </ListItemButton>
             </ListItem>
           ))}
         </List>
