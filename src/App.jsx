@@ -6,6 +6,7 @@ import { AppServiceProvider } from "./components/AppServiceProvider";
 import { AppServiceHeader } from "./components/AppServiceHeader";
 import "./styles.css";
 import UsageReport from "./components/UsageReport";
+import CodeOnboarding from "./components/CodeOnboarding";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("deadcode");
@@ -44,11 +45,21 @@ export default function App() {
           >
             Usage Analysis
           </button>
+
+          
+          <button
+            className={activeTab === "dashboard" ? "tab active" : "tab"}
+            onClick={() => setActiveTab("onboard")}
+          >
+            Onboading New Application
+          </button>
         </div>
           {activeTab === "deadcode" && <DeadCodeReport />}
           {activeTab === "performance" && <PerformanceReport />}
           {activeTab === "dashboard" && <UsageDashboard />}
           {activeTab === "usage" && <UsageReport />}
+           {activeTab === "onboard" && <CodeOnboarding />}
+
         </main>
       </div>
     </AppServiceProvider>
